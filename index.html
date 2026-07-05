@@ -1308,7 +1308,29 @@ input,select,textarea{border:1px solid #cbd5e1;border-radius:14px;padding:13px 1
 @media(max-width:1100px){.grid,.chart-wrap,.rfid-panel{grid-template-columns:1fr!important}.sidebar{width:250px}.content{padding:22px}}
 @media(max-width:860px){.app-layout{display:block}.sidebar{position:relative;width:100%;height:auto}.nav{display:grid;grid-template-columns:1fr 1fr}.topbar{height:auto;display:block;padding:16px 18px}.time-badge{display:inline-block;margin-top:10px}.content{padding:18px}.page-title{font-size:28px}.hero-card{grid-template-columns:1fr;text-align:center}.hero-logo{margin:auto}.profile-grid,.nilai-grid,.assessment-grid,.agenda-grid{grid-template-columns:1fr!important}}
 @media(max-width:560px){.nav{grid-template-columns:1fr}.login-card{padding:22px}.card{padding:18px!important}.hero-left h1{font-size:30px}.donut-row{grid-template-columns:1fr!important;text-align:center}.donut-box{margin:auto}table{min-width:720px}.content{padding:14px}.page-title{font-size:26px}}
-@media print{body{background:white!important}.sidebar,.topbar,.nav,button,#loadingOverlay{display:none!important}.main,.content{padding:0!important;margin:0!important;max-width:none!important}.card{box-shadow:none!important;border:0!important;margin:0!important}.page-title{display:none!important}@page{size:A4 portrait;margin:12mm}}
+.kop-surat{display:flex;align-items:center;gap:18px;padding-bottom:14px}
+.kop-logo{width:88px;height:88px;object-fit:contain;flex-shrink:0}
+.kop-text{flex:1;text-align:center}
+.kop-text h1{margin:2px 0;font-size:24px;letter-spacing:.5px;color:#0f172a}
+.kop-text h2{margin:0;font-size:15px;font-weight:700;color:#0369a1;letter-spacing:1px}
+.kop-text p{margin:4px 0 0;font-size:12.5px;color:#64748b}
+.kop-line-thick{border:none;border-top:3px solid #0f172a;margin:0}
+.kop-line-thin{border:none;border-top:1px solid #0f172a;margin:3px 0 0}
+.laporan-ringkasan{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.ringkasan-item{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px 14px;text-align:center}
+.ringkasan-item b{display:block;font-size:22px;color:#0369a1;margin-bottom:2px}
+.ringkasan-item span{font-size:12px;color:#64748b}
+.laporan-ttd{display:flex;justify-content:space-between;margin-top:46px;font-size:14px;text-align:center}
+.laporan-ttd>div{width:260px}
+.ttd-space{height:64px}
+@media print{
+  body{background:white!important}
+  .sidebar,.topbar,.nav,button,#loadingOverlay,.no-print{display:none!important}
+  .main,.content{padding:0!important;margin:0!important;max-width:none!important}
+  .card{box-shadow:none!important;border:0!important;margin:0!important}
+  .page-title{display:none!important}
+  @page{size:A4 portrait;margin:12mm}
+}
 </style>
 
 </head>
@@ -1400,6 +1422,8 @@ input,select,textarea{border:1px solid #cbd5e1;border-radius:14px;padding:13px 1
       <button onclick="showPage('editAkunPage',this)"><span class="nav-icon">👤</span> Edit Akun</button>
       <button id="btnAssessment" onclick="showPage('assessmentPage',this)"><span class="nav-icon">📝</span> Assessment</button>
       <button id="btnAbsen" onclick="showPage('absenPage',this)"><span class="nav-icon">📡</span> Absen RFID</button>
+      <button id="btnAbsenManual" onclick="showPage('absenManualPage',this)"><span class="nav-icon">✍️</span> Absen Manual</button>
+      <button id="btnLaporanAbsensi" onclick="showPage('laporanAbsensiPage',this)"><span class="nav-icon">📄</span> Laporan Absensi</button>
       <button id="btnDataSiswa" onclick="showPage('siswaPage',this)">
         <span class="nav-icon">👥</span> Data Siswa
       </button>
@@ -1581,6 +1605,127 @@ input,select,textarea{border:1px solid #cbd5e1;border-radius:14px;padding:13px 1
           </div>
         </div>
       </div>
+
+      <div id="absenManualPage" class="card hidden">
+        <h2>Absen Manual</h2>
+        <p style="color:#64748b;margin-top:-8px;">Centang nama siswa yang hadir, lalu klik Simpan. Daftar diambil otomatis dari data siswa yang sudah registrasi.</p>
+
+        <div class="grid" style="grid-template-columns:1fr 1fr;">
+          <div class="card" style="box-shadow:none;border:1px solid var(--border);margin:0;">
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:6px;">
+              <div style="flex:1;min-width:150px;">
+                <label>Tanggal Absen</label>
+                <input type="date" id="manualAbsenTanggal" onchange="renderAbsenManualChecklist()">
+              </div>
+              <div style="flex:1;min-width:150px;">
+                <label>Cari Nama</label>
+                <input type="text" id="manualAbsenSearch" placeholder="Ketik nama siswa..." oninput="renderAbsenManualChecklist()">
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin:10px 0;">
+              <button type="button" onclick="centangSemuaAbsenManual(true)">☑ Centang Semua</button>
+              <button type="button" class="btn-red" onclick="centangSemuaAbsenManual(false)">☐ Batal Semua</button>
+            </div>
+
+            <div id="checklistAbsenManual" style="max-height:440px;overflow:auto;border:1px solid var(--border);border-radius:14px;"></div>
+
+            <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+              <button onclick="simpanAbsenManualChecklist()">✔ Simpan Absen yang Dicentang</button>
+              <button class="btn-red" onclick="simpanAlpaAbsenManual()">Tandai Sisanya Alpa</button>
+            </div>
+          </div>
+
+          <div class="card" style="box-shadow:none;border:1px solid var(--border);margin:0;">
+            <h3 style="margin-top:0;">Riwayat Absen</h3>
+            <label>Lihat Tanggal</label>
+            <input type="date" id="manualAbsenFilterTanggal" onchange="renderAbsenManualTable()">
+            <div id="tableAbsenManual" style="overflow:auto;margin-top:10px;"></div>
+          </div>
+        </div>
+      </div>
+
+
+      <div id="laporanAbsensiPage" class="card hidden">
+        <h2 class="no-print">Laporan Absensi</h2>
+        <p class="no-print" style="color:#64748b;margin-top:-8px;">Buat laporan absensi harian atau bulanan siap cetak lengkap dengan kop surat PASPRAPATI.</p>
+
+        <div class="no-print" style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:18px;">
+          <div>
+            <label>Jenis Laporan</label>
+            <select id="laporanJenis" onchange="toggleLaporanJenis()">
+              <option value="harian">Harian</option>
+              <option value="bulanan">Bulanan</option>
+            </select>
+          </div>
+          <div id="laporanHarianWrap">
+            <label>Tanggal</label>
+            <input type="date" id="laporanTanggal">
+          </div>
+          <div id="laporanBulanWrap" class="hidden">
+            <label>Bulan</label>
+            <select id="laporanBulan">
+              <option value="1">Januari</option>
+              <option value="2">Februari</option>
+              <option value="3">Maret</option>
+              <option value="4">April</option>
+              <option value="5">Mei</option>
+              <option value="6">Juni</option>
+              <option value="7">Juli</option>
+              <option value="8">Agustus</option>
+              <option value="9">September</option>
+              <option value="10">Oktober</option>
+              <option value="11">November</option>
+              <option value="12">Desember</option>
+            </select>
+          </div>
+          <div id="laporanTahunWrap" class="hidden">
+            <label>Tahun</label>
+            <input type="number" id="laporanTahun" min="2020" max="2100" style="width:110px;">
+          </div>
+          <div>
+            <button type="button" onclick="tampilkanLaporanAbsensi()">Tampilkan Laporan</button>
+          </div>
+          <div>
+            <button type="button" onclick="cetakLaporanAbsensi()">🖨️ Cetak / Simpan PDF</button>
+          </div>
+        </div>
+
+        <div id="laporanAbsensiPrintArea">
+          <div class="kop-surat">
+            <img src="pasprapatii.png" class="kop-logo" onerror="this.style.display='none'">
+            <div class="kop-text">
+              <h2>GERAKAN PRAMUKA</h2>
+              <h1>PASUKAN PRAMUKA 43 (PASPRAPATI)</h1>
+              <p>Sistem Presensi, Perizinan, dan Administrasi Anggota Pramuka Berbasis Digital</p>
+            </div>
+            <img src="pasprapatii.png" class="kop-logo" onerror="this.style.display='none'" style="visibility:hidden;">
+          </div>
+          <hr class="kop-line-thick">
+          <hr class="kop-line-thin">
+
+          <h3 id="laporanJudul" style="text-align:center;text-transform:uppercase;margin:20px 0 4px;letter-spacing:1px;">Laporan Absensi Harian</h3>
+          <p id="laporanPeriode" style="text-align:center;margin:0 0 20px;color:#475569;">-</p>
+
+          <div id="laporanRingkasan" class="laporan-ringkasan"></div>
+
+          <div id="laporanTabelWrap" style="overflow:auto;"></div>
+
+          <div class="laporan-ttd">
+            <div>
+              Mengetahui,<br>Kepala Sekolah
+              <div class="ttd-space"></div>
+              <b>____________________</b>
+            </div>
+            <div>
+              Dicetak pada: <span id="laporanTanggalCetak">-</span><br>Guru Pembina
+              <div class="ttd-space"></div>
+              <b id="laporanNamaGuru">____________________</b>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <div id="siswaPage" class="card hidden">
         <h2>Data Siswa</h2><input type="hidden" id="editSiswaId">
@@ -3018,6 +3163,10 @@ function masukAplikasi(user, targetPage){
   if(activeRoleText) activeRoleText.innerText = isGuru ? "Teacher" : (isBPH ? "BPH" : "Student");
 
   document.getElementById("btnAbsen").style.display = isGuru ? "flex" : "none";
+  const btnAbsenManualEl = document.getElementById("btnAbsenManual");
+  if(btnAbsenManualEl) btnAbsenManualEl.style.display = isGuru ? "flex" : "none";
+  const btnLaporanAbsensiEl = document.getElementById("btnLaporanAbsensi");
+  if(btnLaporanAbsensiEl) btnLaporanAbsensiEl.style.display = isGuru ? "flex" : "none";
   document.getElementById("btnAccIzin").style.display = isGuru ? "flex" : "none";
   document.getElementById("btnDataSiswa").style.display = isGuru ? "flex" : "none";
   document.getElementById("btnInputNilai").style.display = isGuru ? "flex" : "none";
@@ -3088,6 +3237,16 @@ function showPage(id,btn){
     return;
   }
 
+  if(id === "absenManualPage" && currentUser.role !== "guru"){
+    showError("Menu Absen Manual hanya untuk guru");
+    return;
+  }
+
+  if(id === "laporanAbsensiPage" && currentUser.role !== "guru"){
+    showError("Menu Laporan Absensi hanya untuk guru");
+    return;
+  }
+
   if(id === "accPage" && currentUser.role !== "guru"){
     showError("Akses ACC Izin hanya untuk guru");
     return;
@@ -3098,7 +3257,7 @@ function showPage(id,btn){
     return;
   }
 
-  const pages=["dashboardPage","editAkunPage","assessmentPage","absenPage","siswaPage","nilaiPage","agendaPage","uploadDokumenPage","kelolaBeritaPage","sakitPage","izinPage","accPage","historiRegistrasiPage","riwayatPage"];
+  const pages=["dashboardPage","editAkunPage","assessmentPage","absenPage","absenManualPage","laporanAbsensiPage","siswaPage","nilaiPage","agendaPage","uploadDokumenPage","kelolaBeritaPage","sakitPage","izinPage","accPage","historiRegistrasiPage","riwayatPage"];
   pages.forEach(page=>document.getElementById(page).classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 
@@ -3110,6 +3269,8 @@ function showPage(id,btn){
     editAkunPage:"Edit Akun",
     assessmentPage:"Assessment",
     absenPage:"Absen RFID",
+    absenManualPage:"Absen Manual",
+    laporanAbsensiPage:"Laporan Absensi",
     siswaPage:"Data Siswa",
     nilaiPage:"Input Nilai",
     agendaPage:"Agenda",
@@ -3148,6 +3309,14 @@ function showPage(id,btn){
       document.getElementById("rfidAbsen").value="";
       document.getElementById("rfidAbsen").focus();
     },200);
+  }
+
+  if(id==="absenManualPage" && typeof initAbsenManualPage==="function"){
+    initAbsenManualPage();
+  }
+
+  if(id==="laporanAbsensiPage" && typeof initLaporanAbsensiPage==="function"){
+    initLaporanAbsensiPage();
   }
 
   if(id === "siswaPage") renderListSiswa();
@@ -5700,6 +5869,459 @@ window.addEventListener("load", async()=>{
   document.addEventListener('DOMContentLoaded', function(){
     try{ updateRegisterRFIDPlaceholder(); }catch(e){}
   });
+})();
+</script>
+
+<script id="pasprapati-absen-manual-patch">
+/* ================= PATCH: ABSEN MANUAL UNTUK GURU ================= */
+(function(){
+  function escManual(v){
+    return String(v==null?'':v)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function todayDateInputValue(){
+    const d=new Date();
+    return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  }
+  function fmtTanggalManual(dateStr){
+    if(!dateStr) return '';
+    const d=new Date(dateStr+'T00:00:00');
+    if(isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('id-ID');
+  }
+  function fmtJamManual(timeStr){
+    if(!timeStr) return '';
+    const parts=timeStr.split(':');
+    if(parts.length<2) return timeStr;
+    return `${pad2(parts[0])}.${pad2(parts[1])}.00`;
+  }
+  function getSiswaListForManual(){
+    return Array.isArray(siswa) ? siswa : [];
+  }
+  function getAbsensiListForManual(){
+    if(!Array.isArray(absensi)) absensi=[];
+    return absensi;
+  }
+  function persistAbsenManual(){
+    try{ if(typeof saveAll==='function') saveAll(); else if(typeof saveLocalOnly==='function') saveLocalOnly(); }catch(e){ console.warn(e); }
+    try{ if(typeof updateDashboard==='function') updateDashboard(); }catch(e){}
+    try{ if(typeof renderData==='function') renderData(); }catch(e){}
+  }
+
+  window.initAbsenManualPage = function(){
+    const tgl=document.getElementById('manualAbsenTanggal');
+    const filterTgl=document.getElementById('manualAbsenFilterTanggal');
+    const today=todayDateInputValue();
+    if(tgl && !tgl.value) tgl.value=today;
+    if(filterTgl && !filterTgl.value) filterTgl.value=today;
+    renderAbsenManualChecklist();
+    renderAbsenManualTable();
+  };
+
+  function getNamaSiswaManual(s){ return s.nama || s.fullName || s.namaSiswa || '-'; }
+  function getRfidSiswaManual(s){ return s.rfid || s.rfidSiswa || s.loginRFID || s.uid || ''; }
+
+  function cariAbsenManual(rfid, tanggal){
+    const list=getAbsensiListForManual();
+    return list.find(function(a){ return String(a.rfid || '').trim()===String(rfid || '').trim() && a.tanggal===tanggal; });
+  }
+
+  window.renderAbsenManualChecklist = function(){
+    const box=document.getElementById('checklistAbsenManual');
+    if(!box) return;
+    const tglInput=document.getElementById('manualAbsenTanggal');
+    const tanggal=tglInput && tglInput.value ? fmtTanggalManual(tglInput.value) : fmtTanggalManual(todayDateInputValue());
+    const searchEl=document.getElementById('manualAbsenSearch');
+    const keyword=searchEl ? searchEl.value.trim().toLowerCase() : '';
+
+    const list=getSiswaListForManual();
+    if(!list.length){
+      box.innerHTML='<div class="small-text" style="padding:14px;color:#64748b;">Belum ada siswa yang teregistrasi.</div>';
+      return;
+    }
+
+    const filtered=list.filter(function(s){
+      if(!keyword) return true;
+      return getNamaSiswaManual(s).toLowerCase().indexOf(keyword) >= 0;
+    });
+
+    if(!filtered.length){
+      box.innerHTML='<div class="small-text" style="padding:14px;color:#64748b;">Nama siswa tidak ditemukan.</div>';
+      return;
+    }
+
+    box.innerHTML=filtered.map(function(s,i){
+      const nama=getNamaSiswaManual(s);
+      const rfid=getRfidSiswaManual(s);
+      const existing=cariAbsenManual(rfid, tanggal);
+      const sudahHadir=!!(existing && (existing.status==='Masuk' || existing.status==='Pulang' || existing.status==='Hadir'));
+      const sudahAlpa=!!(existing && existing.status==='Alpa');
+      let badge='';
+      if(sudahHadir) badge='<span class="pengajuan-status status-approved" style="margin:0;">Hadir'+(existing.masuk ? ' '+escManual(existing.masuk) : '')+'</span>';
+      else if(sudahAlpa) badge='<span class="pengajuan-status status-rejected" style="margin:0;">Alpa</span>';
+
+      return `<label style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;">
+        <input type="checkbox" class="chkAbsenManualItem" data-rfid="${escManual(rfid)}" data-nama="${escManual(nama)}" ${sudahHadir ? 'checked' : ''} style="width:18px;height:18px;">
+        <span style="width:28px;color:#64748b;font-size:13px;">${i+1}.</span>
+        <span style="flex:1;">
+          <b>${escManual(nama)}</b><br>
+          <span style="font-size:12px;color:#64748b;">RFID: ${escManual(rfid || 'Belum ada RFID')}</span>
+        </span>
+        ${badge}
+      </label>`;
+    }).join('');
+  };
+
+  window.centangSemuaAbsenManual = function(checked){
+    document.querySelectorAll('.chkAbsenManualItem').forEach(function(chk){ chk.checked=!!checked; });
+  };
+
+  window.simpanAbsenManualChecklist = function(){
+    try{
+      if(!currentUser || currentUser.role !== 'guru'){
+        if(typeof showError==='function') showError('Menu Absen Manual hanya untuk guru'); else alert('Menu Absen Manual hanya untuk guru');
+        return;
+      }
+      const tglInput=document.getElementById('manualAbsenTanggal');
+      if(!tglInput || !tglInput.value){
+        if(typeof showError==='function') showError('Tanggal absen wajib diisi'); else alert('Tanggal absen wajib diisi');
+        return;
+      }
+      const tanggal=fmtTanggalManual(tglInput.value);
+      const jamSekarang=fmtJamManual(pad2(new Date().getHours())+':'+pad2(new Date().getMinutes()));
+      const checkedBoxes=document.querySelectorAll('.chkAbsenManualItem:checked');
+
+      if(!checkedBoxes.length){
+        if(typeof showError==='function') showError('Belum ada siswa yang dicentang'); else alert('Belum ada siswa yang dicentang');
+        return;
+      }
+
+      const list=getAbsensiListForManual();
+      let jumlah=0;
+
+      checkedBoxes.forEach(function(chk){
+        const rfid=chk.getAttribute('data-rfid') || '';
+        const nama=chk.getAttribute('data-nama') || '';
+        const idx=list.findIndex(function(a){ return String(a.rfid || '').trim()===rfid && a.tanggal===tanggal; });
+        const existing=idx>=0 ? list[idx] : null;
+
+        const dataAbsen={
+          id: existing ? existing.id : Date.now()+jumlah,
+          nama: nama,
+          rfid: rfid,
+          tanggal: tanggal,
+          masuk: existing && existing.masuk ? existing.masuk : jamSekarang,
+          pulang: existing ? existing.pulang : '',
+          status: existing && existing.pulang ? 'Pulang' : 'Masuk',
+          keterangan: existing ? existing.keterangan : 'Absen manual (checklist guru)',
+          sumber: 'Absen Manual',
+          diinputOleh: currentUser.fullName || currentUser.username,
+          waktuInput: new Date().toLocaleString('id-ID')
+        };
+
+        if(idx>=0) list[idx]=dataAbsen; else list.push(dataAbsen);
+        jumlah++;
+      });
+
+      persistAbsenManual();
+      renderAbsenManualChecklist();
+      renderAbsenManualTable();
+
+      if(typeof showSuccess==='function') showSuccess(jumlah + ' siswa berhasil ditandai hadir'); else alert(jumlah + ' siswa berhasil ditandai hadir');
+    }catch(err){
+      console.error(err);
+      if(typeof showError==='function') showError('Gagal menyimpan absen manual'); else alert('Gagal menyimpan absen manual');
+    }
+  };
+
+  window.simpanAlpaAbsenManual = function(){
+    try{
+      if(!currentUser || currentUser.role !== 'guru'){
+        if(typeof showError==='function') showError('Menu Absen Manual hanya untuk guru'); else alert('Menu Absen Manual hanya untuk guru');
+        return;
+      }
+      const tglInput=document.getElementById('manualAbsenTanggal');
+      if(!tglInput || !tglInput.value){
+        if(typeof showError==='function') showError('Tanggal absen wajib diisi'); else alert('Tanggal absen wajib diisi');
+        return;
+      }
+      if(!confirm('Tandai semua siswa yang TIDAK dicentang sebagai Alpa untuk tanggal ini?')) return;
+
+      const tanggal=fmtTanggalManual(tglInput.value);
+      const checkedRfids=Array.from(document.querySelectorAll('.chkAbsenManualItem:checked')).map(function(chk){ return chk.getAttribute('data-rfid') || ''; });
+      const allBoxes=document.querySelectorAll('.chkAbsenManualItem');
+
+      const list=getAbsensiListForManual();
+      let jumlah=0;
+
+      allBoxes.forEach(function(chk){
+        const rfid=chk.getAttribute('data-rfid') || '';
+        const nama=chk.getAttribute('data-nama') || '';
+        if(checkedRfids.indexOf(rfid) >= 0) return;
+
+        const idx=list.findIndex(function(a){ return String(a.rfid || '').trim()===rfid && a.tanggal===tanggal; });
+        if(idx>=0) return;
+
+        list.push({
+          id: Date.now()+jumlah,
+          nama: nama,
+          rfid: rfid,
+          tanggal: tanggal,
+          masuk: '',
+          pulang: '',
+          status: 'Alpa',
+          keterangan: 'Absen manual (checklist guru)',
+          sumber: 'Absen Manual',
+          diinputOleh: currentUser.fullName || currentUser.username,
+          waktuInput: new Date().toLocaleString('id-ID')
+        });
+        jumlah++;
+      });
+
+      persistAbsenManual();
+      renderAbsenManualChecklist();
+      renderAbsenManualTable();
+
+      if(typeof showSuccess==='function') showSuccess(jumlah + ' siswa ditandai Alpa'); else alert(jumlah + ' siswa ditandai Alpa');
+    }catch(err){
+      console.error(err);
+      if(typeof showError==='function') showError('Gagal menandai Alpa'); else alert('Gagal menandai Alpa');
+    }
+  };
+
+  window.renderAbsenManualTable = function(){
+    const box=document.getElementById('tableAbsenManual');
+    if(!box) return;
+    const filterEl=document.getElementById('manualAbsenFilterTanggal');
+    const tanggalFilter=filterEl && filterEl.value ? fmtTanggalManual(filterEl.value) : '';
+    const list=getAbsensiListForManual();
+    const filtered=tanggalFilter ? list.filter(function(a){ return a.tanggal===tanggalFilter; }) : list;
+
+    if(!filtered.length){
+      box.innerHTML='<div class="small-text" style="color:#64748b;">Belum ada data absen untuk tanggal ini.</div>';
+      return;
+    }
+
+    const rows=filtered.map(function(a){
+      return `<tr>
+        <td>${escManual(a.nama)}</td>
+        <td>${escManual(a.rfid || '-')}</td>
+        <td>${escManual(a.tanggal || '-')}</td>
+        <td>${escManual(a.masuk || '-')}</td>
+        <td>${escManual(a.pulang || '-')}</td>
+        <td>${escManual(a.status || '-')}</td>
+        <td><button type="button" class="btn-hapus-siswa" onclick="hapusAbsenManual(${a.id})">Hapus</button></td>
+      </tr>`;
+    }).join('');
+
+    box.innerHTML=`<table><tr><th>Nama</th><th>RFID</th><th>Tanggal</th><th>Masuk</th><th>Pulang</th><th>Status</th><th>Aksi</th></tr>${rows}</table>`;
+  };
+
+  window.hapusAbsenManual = function(id){
+    if(!currentUser || currentUser.role !== 'guru'){
+      if(typeof showError==='function') showError('Hanya guru yang bisa menghapus data absen'); else alert('Hanya guru yang bisa menghapus data absen');
+      return;
+    }
+    const list=getAbsensiListForManual();
+    const idx=list.findIndex(function(a){ return a.id===id; });
+    if(idx<0){ alert('Data absen tidak ditemukan'); return; }
+    if(!confirm('Hapus data absen ini?')) return;
+    list.splice(idx,1);
+    persistAbsenManual();
+    renderAbsenManualChecklist();
+    renderAbsenManualTable();
+    if(typeof showSuccess==='function') showSuccess('Data absen berhasil dihapus'); else alert('Data absen berhasil dihapus');
+  };
+})();
+</script>
+
+<script id="pasprapati-laporan-absensi-patch">
+/* ================= PATCH: LAPORAN ABSENSI HARIAN & BULANAN (SIAP CETAK) ================= */
+(function(){
+  function esc(v){
+    return String(v==null?'':v)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function todayDateInputValue(){
+    const d=new Date();
+    return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  }
+  function fmtTanggalDariInput(dateStr){
+    if(!dateStr) return '';
+    const d=new Date(dateStr+'T00:00:00');
+    if(isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('id-ID');
+  }
+  function parseTanggalID(str){
+    if(!str) return null;
+    const p=String(str).split('/');
+    if(p.length<3) return null;
+    return {d:parseInt(p[0],10), m:parseInt(p[1],10), y:parseInt(p[2],10)};
+  }
+  function getNamaSiswaRep(s){ return s.nama || s.fullName || s.namaSiswa || '-'; }
+  function getRfidSiswaRep(s){ return s.rfid || s.rfidSiswa || s.loginRFID || s.uid || ''; }
+  function namaBulan(m){
+    const arr=['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    return arr[m] || '';
+  }
+  function siswaListRep(){ return Array.isArray(siswa) ? siswa : []; }
+  function absensiListRep(){ return Array.isArray(absensi) ? absensi : []; }
+
+  function renderRingkasan(items){
+    const box=document.getElementById('laporanRingkasan');
+    if(!box) return;
+    box.innerHTML=items.map(function(it){
+      return `<div class="ringkasan-item"><b>${esc(it.value)}</b><span>${esc(it.label)}</span></div>`;
+    }).join('');
+  }
+
+  window.toggleLaporanJenis = function(){
+    const jenisEl=document.getElementById('laporanJenis');
+    const jenis=jenisEl ? jenisEl.value : 'harian';
+    const harianWrap=document.getElementById('laporanHarianWrap');
+    const bulanWrap=document.getElementById('laporanBulanWrap');
+    const tahunWrap=document.getElementById('laporanTahunWrap');
+    if(harianWrap) harianWrap.classList.toggle('hidden', jenis!=='harian');
+    if(bulanWrap) bulanWrap.classList.toggle('hidden', jenis!=='bulanan');
+    if(tahunWrap) tahunWrap.classList.toggle('hidden', jenis!=='bulanan');
+  };
+
+  window.initLaporanAbsensiPage = function(){
+    const tglEl=document.getElementById('laporanTanggal');
+    const bulanEl=document.getElementById('laporanBulan');
+    const tahunEl=document.getElementById('laporanTahun');
+    const now=new Date();
+    if(tglEl && !tglEl.value) tglEl.value=todayDateInputValue();
+    if(bulanEl && !bulanEl.value) bulanEl.value=String(now.getMonth()+1);
+    if(tahunEl && !tahunEl.value) tahunEl.value=String(now.getFullYear());
+    toggleLaporanJenis();
+    tampilkanLaporanAbsensi();
+  };
+
+  function buildLaporanHarian(){
+    const tglInput=document.getElementById('laporanTanggal');
+    const tanggalValue=tglInput && tglInput.value ? tglInput.value : todayDateInputValue();
+    const tanggalID=fmtTanggalDariInput(tanggalValue);
+
+    document.getElementById('laporanJudul').innerText='Laporan Absensi Harian';
+    document.getElementById('laporanPeriode').innerText='Tanggal: ' + tanggalID;
+
+    const listSiswa=siswaListRep();
+    const listAbsensi=absensiListRep();
+    let hadir=0, alpa=0, belum=0;
+
+    const rows=listSiswa.map(function(s,i){
+      const nama=getNamaSiswaRep(s);
+      const rfid=getRfidSiswaRep(s);
+      const rec=listAbsensi.find(function(a){ return String(a.rfid||'').trim()===String(rfid||'').trim() && a.tanggal===tanggalID; });
+      let status, masuk='-', pulang='-';
+      if(rec && (rec.status==='Masuk' || rec.status==='Pulang' || rec.status==='Hadir')){
+        status='Hadir'; hadir++; masuk=rec.masuk || '-'; pulang=rec.pulang || '-';
+      }else if(rec && rec.status==='Alpa'){
+        status='Alpa'; alpa++;
+      }else{
+        status='Belum Absen'; belum++;
+      }
+      const statusClass = status==='Hadir' ? 'status-approved' : (status==='Alpa' ? 'status-rejected' : 'status-pending');
+      return `<tr><td>${i+1}</td><td>${esc(nama)}</td><td>${esc(rfid||'-')}</td><td>${esc(masuk)}</td><td>${esc(pulang)}</td><td><span class="pengajuan-status ${statusClass}" style="margin:0;">${esc(status)}</span></td></tr>`;
+    }).join('');
+
+    document.getElementById('laporanTabelWrap').innerHTML =
+      `<table><tr><th>No</th><th>Nama</th><th>RFID</th><th>Jam Masuk</th><th>Jam Pulang</th><th>Status</th></tr>${rows || '<tr><td colspan="6" style="text-align:center;color:#64748b;">Belum ada data siswa.</td></tr>'}</table>`;
+
+    const totalSiswa=listSiswa.length;
+    const persen=totalSiswa>0 ? ((hadir/totalSiswa)*100).toFixed(1) : '0.0';
+
+    renderRingkasan([
+      {label:'Total Siswa', value:totalSiswa},
+      {label:'Hadir', value:hadir},
+      {label:'Alpa', value:alpa},
+      {label:'Belum Absen', value:belum},
+      {label:'Persentase Hadir', value:persen+'%'}
+    ]);
+  }
+
+  function buildLaporanBulanan(){
+    const bulanEl=document.getElementById('laporanBulan');
+    const tahunEl=document.getElementById('laporanTahun');
+    const bulan=bulanEl && bulanEl.value ? parseInt(bulanEl.value,10) : (new Date().getMonth()+1);
+    const tahun=tahunEl && tahunEl.value ? parseInt(tahunEl.value,10) : new Date().getFullYear();
+
+    document.getElementById('laporanJudul').innerText='Laporan Absensi Bulanan';
+    document.getElementById('laporanPeriode').innerText='Periode: ' + namaBulan(bulan) + ' ' + tahun;
+
+    const listSiswa=siswaListRep();
+    const listAbsensiBulan=absensiListRep().filter(function(a){
+      const p=parseTanggalID(a.tanggal);
+      return p && p.m===bulan && p.y===tahun;
+    });
+
+    const hariSet={};
+    listAbsensiBulan.forEach(function(a){ hariSet[a.tanggal]=true; });
+    const totalHari=Object.keys(hariSet).length;
+
+    const rows=listSiswa.map(function(s,i){
+      const nama=getNamaSiswaRep(s);
+      const rfid=getRfidSiswaRep(s);
+      const recSiswa=listAbsensiBulan.filter(function(a){ return String(a.rfid||'').trim()===String(rfid||'').trim(); });
+      const hadir=recSiswa.filter(function(a){ return a.status==='Masuk' || a.status==='Pulang' || a.status==='Hadir'; }).length;
+      const alpa=recSiswa.filter(function(a){ return a.status==='Alpa'; }).length;
+      const tidakTercatat=Math.max(totalHari - hadir - alpa, 0);
+      const persen=totalHari>0 ? ((hadir/totalHari)*100).toFixed(1) : '0.0';
+      return `<tr><td>${i+1}</td><td>${esc(nama)}</td><td>${esc(rfid||'-')}</td><td style="text-align:center;">${hadir}</td><td style="text-align:center;">${alpa}</td><td style="text-align:center;">${tidakTercatat}</td><td style="text-align:center;">${persen}%</td></tr>`;
+    }).join('');
+
+    document.getElementById('laporanTabelWrap').innerHTML =
+      `<table><tr><th>No</th><th>Nama</th><th>RFID</th><th>Hadir</th><th>Alpa</th><th>Tidak Tercatat</th><th>Persentase</th></tr>${rows || '<tr><td colspan="7" style="text-align:center;color:#64748b;">Belum ada data siswa.</td></tr>'}</table>`;
+
+    const totalSiswa=listSiswa.length;
+    let rataPersen='0.0';
+    if(totalSiswa>0 && totalHari>0){
+      let sumPersen=0;
+      listSiswa.forEach(function(s){
+        const rfid=getRfidSiswaRep(s);
+        const hadirS=listAbsensiBulan.filter(function(a){ return String(a.rfid||'').trim()===String(rfid||'').trim() && (a.status==='Masuk' || a.status==='Pulang' || a.status==='Hadir'); }).length;
+        sumPersen += (hadirS/totalHari)*100;
+      });
+      rataPersen=(sumPersen/totalSiswa).toFixed(1);
+    }
+
+    renderRingkasan([
+      {label:'Total Siswa', value:totalSiswa},
+      {label:'Hari Tercatat', value:totalHari},
+      {label:'Rata-rata Kehadiran', value:rataPersen+'%'}
+    ]);
+  }
+
+  window.tampilkanLaporanAbsensi = function(){
+    try{
+      const jenisEl=document.getElementById('laporanJenis');
+      const jenis=jenisEl ? jenisEl.value : 'harian';
+
+      const cetakEl=document.getElementById('laporanTanggalCetak');
+      if(cetakEl) cetakEl.innerText=new Date().toLocaleString('id-ID');
+
+      const namaGuruEl=document.getElementById('laporanNamaGuru');
+      if(namaGuruEl) namaGuruEl.innerText=(currentUser && (currentUser.fullName || currentUser.username)) || '____________________';
+
+      if(jenis==='bulanan') buildLaporanBulanan(); else buildLaporanHarian();
+    }catch(err){
+      console.error(err);
+      if(typeof showError==='function') showError('Gagal membuat laporan absensi'); else alert('Gagal membuat laporan absensi');
+    }
+  };
+
+  window.cetakLaporanAbsensi = function(){
+    try{
+      tampilkanLaporanAbsensi();
+      setTimeout(function(){ window.print(); }, 150);
+    }catch(err){
+      console.error(err);
+      if(typeof showError==='function') showError('Gagal mencetak laporan'); else alert('Gagal mencetak laporan');
+    }
+  };
 })();
 </script>
 
