@@ -17,14 +17,14 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#0a3822',
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            200: '#fecaca',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
                         }
                     }
                 }
@@ -154,18 +154,18 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
 
-        #sidebar { background-image: linear-gradient(180deg, #0a3822 0%, #0d4a2c 45%, #082f1c 100%); }
+        #sidebar { background-image: linear-gradient(160deg, #1e293b 0%, #0f172a 100%); }
         .nav-btn { position: relative; }
-        .nav-btn.nav-active { border-left: 3px solid #4ade80; }
+        .nav-btn.nav-active { border-left: 3px solid #ef4444; }
         .nav-btn .nav-ico { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.06); transition: all .2s ease; }
-        .nav-btn.nav-active .nav-ico { background: rgba(21,128,61,0.12); color: #15803d; }
-        .brand-logo-badge { background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); box-shadow: 0 8px 20px -6px rgba(21,128,61,0.6); }
+        .nav-btn.nav-active .nav-ico { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .brand-logo-badge { background: #ffffff; box-shadow: 0 8px 20px -6px rgba(0,0,0,0.2); padding: 4px; }
         .kpi-card { transition: transform .2s ease, box-shadow .2s ease; }
         .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -10px rgba(15,23,42,0.15); }
         .dark .kpi-card:hover { box-shadow: 0 12px 24px -10px rgba(0,0,0,0.5); }
         .gudang-table thead th { position: sticky; top: 0; z-index: 10; }
-        .gudang-row:hover { background-color: rgba(21,128,61,0.04); }
-        .dark .gudang-row:hover { background-color: rgba(74,222,128,0.06); }
+        .gudang-row:hover { background-color: rgba(239, 68, 68, 0.04); }
+        .dark .gudang-row:hover { background-color: rgba(239, 68, 68, 0.06); }
         .barcode-box svg { display: block; margin: 0 auto; max-width: 100%; }
         .badge-pill { display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:999px; font-size:10px; font-weight:800; letter-spacing:.02em; }
         @keyframes toast-in { from { opacity:0; transform: translateY(8px);} to { opacity:1; transform: translateY(0);} }
@@ -179,8 +179,8 @@
         <aside id="sidebar" class="fixed lg:static top-0 h-screen w-72 bg-brand-900 text-white shadow-2xl z-50 transition-transform duration-300 ease-in-out print-hidden flex flex-col shrink-0 -translate-x-full lg:translate-x-0">
             <div class="p-6 pb-8 border-b border-white/10 relative">
                 <div class="flex items-center gap-3">
-                    <div class="brand-logo-badge w-11 h-11 rounded-xl flex items-center justify-center shrink-0">
-                        <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                    <div class="brand-logo-badge w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-white">
+                        <img src="Logo SJT.png" alt="SJT Logo" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/100x100/ffffff/ef4444?text=SJT'">
                     </div>
                     <div class="flex flex-col gap-1">
                         <h1 class="text-base font-black text-white leading-tight tracking-tight">
@@ -188,8 +188,8 @@
                         </h1>
                     </div>
                 </div>
-                <p class="text-[10px] text-brand-100/80 font-bold uppercase tracking-widest mt-3">Divisi Administrasi & Elektrikal</p>
-                <button onclick="toggleSidebar()" class="absolute top-6 right-4 lg:hidden text-brand-100 hover:text-white">
+                <p class="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-3">Divisi Administrasi & Elektrikal</p>
+                <button onclick="toggleSidebar()" class="absolute top-6 right-4 lg:hidden text-slate-300 hover:text-white">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
@@ -200,48 +200,25 @@
                 </button>
                 
                 <div class="pt-4 pb-2">
-                    <p class="px-4 text-[10px] font-bold text-brand-200/50 uppercase tracking-widest">Operasional</p>
+                    <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Operasional</p>
                 </div>
 
-                <button onclick="switchTab('penawaran')" id="btn-penawaran" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-brand-100 hover:bg-brand-800 hover:text-white">
+                <button onclick="switchTab('penawaran')" id="btn-penawaran" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white">
                     <div class="flex items-center gap-3"><i data-lucide="file-text" class="w-5 h-5"></i><span>Surat Penawaran</span></div>
                 </button>
-                <button onclick="switchTab('invoice')" id="btn-invoice" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-brand-100 hover:bg-brand-800 hover:text-white">
+                <button onclick="switchTab('invoice')" id="btn-invoice" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white">
                     <div class="flex items-center gap-3"><i data-lucide="receipt" class="w-5 h-5"></i><span>Invoice / Tagihan</span></div>
                 </button>
-                <button onclick="switchTab('gudang')" id="btn-gudang" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-brand-100 hover:bg-brand-800 hover:text-white">
+                <button onclick="switchTab('gudang')" id="btn-gudang" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white">
                     <div class="flex items-center gap-3"><i data-lucide="warehouse" class="w-5 h-5"></i><span>Data Gudang</span></div>
                 </button>
-                <button onclick="switchTab('keuangan')" id="btn-keuangan" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-brand-100 hover:bg-brand-800 hover:text-white">
+                <button onclick="switchTab('keuangan')" id="btn-keuangan" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white">
                     <div class="flex items-center gap-3"><i data-lucide="landmark" class="w-5 h-5"></i><span>Laporan Keuangan</span></div>
                 </button>
-                <button onclick="switchTab('rincian')" id="btn-rincian" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-brand-100 hover:bg-brand-800 hover:text-white">
+                <button onclick="switchTab('rincian')" id="btn-rincian" class="nav-btn w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white">
                     <div class="flex items-center gap-3"><i data-lucide="book-open" class="w-5 h-5"></i><span>Buku Kas / Rincian</span></div>
                 </button>
             </nav>
-
-            <div id="user-profile-section" class="p-5 bg-[#082f1c] flex flex-col gap-3 justify-center items-center">
-                <!-- Tombol Login (Tampil jika belum login) -->
-                <button id="sidebar-btn-login" onclick="openAuthModal('login')" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-900/50">
-                    <i data-lucide="log-in" class="w-4 h-4"></i> Portal Login
-                </button>
-
-                <!-- Info User (Tampil jika sudah login) -->
-                <div id="sidebar-user-info" class="hidden w-full flex items-center justify-between">
-                    <div class="flex items-center gap-3 truncate">
-                        <div class="w-10 h-10 bg-brand-700 rounded-full flex items-center justify-center font-bold text-white shadow-inner shrink-0">
-                            <i data-lucide="user" class="w-5 h-5"></i>
-                        </div>
-                        <div class="text-left truncate">
-                            <p class="text-sm font-bold text-white truncate" id="sidebar-user-email">User</p>
-                            <p class="text-[10px] text-brand-200">Akses Operasional</p>
-                        </div>
-                    </div>
-                    <button onclick="handleLogoutAction()" class="text-brand-200 hover:text-red-400 transition-colors p-2 rounded-lg bg-brand-800 hover:bg-brand-900" title="Logout">
-                        <i data-lucide="log-out" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
         </aside>
 
         <div id="mobile-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-40 hidden lg:hidden print-hidden"></div>
@@ -530,9 +507,9 @@
                                 <div class="text-center w-64 mr-4">
                                     <p class="mb-1">Jakarta, <span id="prev-doc-date">15 Januari 2026</span></p>
                                     <p class="mb-2">Hormat kami</p>
-                                    <div class="h-24 w-full flex items-center justify-center">
-                                        <img id="prev-stamp-img" src="SJTlogo.png" alt="Stempel Perusahaan" class="h-24 w-24 object-contain opacity-80 -rotate-6 shrink-0 relative z-0" style="mix-blend-mode: multiply;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/ffffff/dc2626?text=STEMPEL'">
-                                        <img id="prev-signature-img" src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Signature_of_John_Hancock.png" alt="TTD" class="h-24 object-contain opacity-80 shrink-0 -ml-16 relative z-10" style="mix-blend-mode: multiply;" onerror="this.onerror=null;this.src='https://placehold.co/300x100/ffffff/64748b?text=TTD'">
+                                    <div class="h-24 w-full relative flex items-center justify-center bg-white">
+                                        <img id="prev-stamp-img" src="SJTlogo.png" alt="Stempel Perusahaan" class="absolute h-24 w-24 object-contain opacity-80 -rotate-6 z-0" style="left: 10px; mix-blend-mode: multiply;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/ffffff/dc2626?text=STEMPEL'">
+                                        <img id="prev-signature-img" src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Signature_of_John_Hancock.png" alt="TTD" class="absolute h-24 object-contain opacity-90 z-10" style="left: 45px; mix-blend-mode: multiply;" onerror="this.onerror=null;this.src='https://placehold.co/300x100/ffffff/64748b?text=TTD'">
                                     </div>
                                     <p id="prev-sign-name" class="font-bold underline mt-1 relative z-10 inline-block px-1">Dwi Putri</p>
                                     <p id="prev-sign-role" class="relative z-10">Finance</p>
@@ -1022,19 +999,6 @@
     <script>
         // Core initialization
         lucide.createIcons();
-        window.isUserAuthenticated = true; // Hardcode access
-        window.protectedTabs = [];
-        
-        // Auth stubs
-        window.openAuthModal = function(type) {
-            showAlert('Info', 'Fitur Login sedang dalam pengembangan.', 'info');
-        }
-        
-        window.handleLogoutAction = function() {
-            showAlert('Info', 'Anda telah keluar.', 'success');
-            document.getElementById('sidebar-btn-login').classList.remove('hidden');
-            document.getElementById('sidebar-user-info').classList.add('hidden');
-        }
 
         // UI States
         let isDarkMode = false;
@@ -1099,8 +1063,6 @@
             setTimeout(() => { modal.classList.add('hidden'); }, 200);
         }
 
-        window.checkAuthAndExecute = function(func) { func(); }
-
         const chartInstances = {};
         window.currentTab = 'dashboard';
         let currentDocType = 'penawaran';
@@ -1132,11 +1094,11 @@
             
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('bg-white', 'dark:bg-slate-800', 'text-brand-900', 'dark:text-white', 'shadow-sm', 'font-bold', 'nav-active');
-                btn.classList.add('text-brand-100');
+                btn.classList.add('text-slate-300');
             });
             const activeBtn = document.getElementById(`btn-${tabId}`);
             if (activeBtn) {
-                activeBtn.classList.remove('text-brand-100');
+                activeBtn.classList.remove('text-slate-300');
                 activeBtn.classList.add('bg-white', 'dark:bg-slate-800', 'text-brand-900', 'dark:text-white', 'shadow-sm', 'font-bold', 'nav-active');
             }
             window.currentTab = tabId;
@@ -2180,8 +2142,9 @@ ${isInv ? '' : `<p style="font-size:11pt;margin-bottom:20pt">${txt('prev-outro-t
         <td width="40%" align="center">
             <p>Jakarta, ${txt('prev-doc-date')}</p>
             <p style="margin-bottom:10pt">Hormat kami</p>
-            <div style="position:relative;height:70pt">
-                ${img('sign', 70)}
+            <div style="position:relative;height:70pt;width:150pt;margin:0 auto;">
+                ${refs.stamp ? `<img src="${refs.stamp.url}" height="70" width="${Math.round(70 * refs.stamp.w / refs.stamp.h)}" style="position:absolute; left:-10pt; z-index:1;">` : ''}
+                ${refs.sign ? `<img src="${refs.sign.url}" height="70" width="${Math.round(70 * refs.sign.w / refs.sign.h)}" style="position:absolute; left:20pt; z-index:2;">` : ''}
             </div>
             <p style="font-weight:bold;text-decoration:underline;margin-top:5pt">${txt('prev-sign-name')}</p>
             <p>${txt('prev-sign-role')}</p>
