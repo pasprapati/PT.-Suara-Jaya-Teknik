@@ -996,6 +996,33 @@
         </div>
     </div>
 
+    <!-- Modal Edit Target -->
+    <div id="target-modal" class="fixed inset-0 bg-slate-900/70 z-[100] hidden flex items-center justify-center p-4 print-hidden transition-opacity">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm flex flex-col overflow-hidden border border-slate-200 dark:border-slate-700 transform transition-transform scale-95 opacity-0" id="target-modal-content">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+                <h3 class="font-bold text-brand-900 dark:text-white uppercase tracking-wider text-sm flex items-center gap-2">
+                    <div class="bg-blue-100 dark:bg-blue-900 p-1.5 rounded-lg text-blue-700 dark:text-blue-400">
+                        <i data-lucide="target" class="w-4 h-4"></i>
+                    </div>
+                    Atur Target Bulanan
+                </h3>
+                <button onclick="closeTargetModal()" class="text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-700 p-1.5 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5">TARGET PENJUALAN (JUTA RP)</label>
+                    <input type="number" id="input-target" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2.5 text-sm focus:border-blue-500 outline-none dark:text-white" placeholder="Contoh: 150">
+                </div>
+                <button onclick="saveTarget()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition-colors shadow-sm mt-2">
+                    Simpan Target
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Core initialization
         lucide.createIcons();
@@ -1105,7 +1132,30 @@
         }
 
         window.editTarget = function() {
-            window.showAlert('Fitur Terkunci', 'Target bulanan diatur dari modul admin terpusat.', 'info');
+            const modal = document.getElementById('target-modal');
+            const content = document.getElementById('target-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        window.closeTargetModal = function() {
+            const modal = document.getElementById('target-modal');
+            const content = document.getElementById('target-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 200);
+        }
+
+        window.saveTarget = function() {
+            const val = document.getElementById('input-target').value;
+            if(val) {
+                document.getElementById('target-value').innerText = window.formatNumberOnly(parseInt(val));
+                window.showAlert('Berhasil', 'Target bulanan telah diperbarui.', 'success');
+            }
+            window.closeTargetModal();
         }
 
         window.formatNumberOnly = function(num) {
